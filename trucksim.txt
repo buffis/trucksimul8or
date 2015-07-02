@@ -10,7 +10,29 @@
 : placeholder
 	0x80 0x80 0x80 0x80 0x80 0x80 0x80 0x80 
 	0x00 0x00 0x00 0x00 0x00 0x00 0x00 
+: topline
+	0xFF 0x00 0x00 0x00 0x00 0x00 0x00 0x00 
+	0x00 0x00 0x00 0x00 0x00 0x00 0x00 
+: stars1
+	0x00 0x02 0x00 0x40 0x00 0x04 0x00 0x00 
+	0x00 0x00 0x00 0x00 0x00 0x00 0x00 
+: mountain
+	0x00 0x00 0x18 0x1C 0x3C 0x3E 0x7E 0xFF 
+	0x00 0x00 0x00 0x00 0x00 0x00 0x00 
+: house
+	0xFF 0x99 0x99 0xFF 0xBD 0xA5 0xE7 0xE7 
+	0x00 0x00 0x00 0x00 0x00 0x00 0x00 
+: church
+	0x08 0x1C 0x08 0x7F 0x5D 0x5D 0x77 0x77 
+	0x00 0x00 0x00 0x00 0x00 0x00 0x00 
+: tree
+	0xE9 0x12 0x6C 0x4A 0x1A 0x10 0x10 0x18 
+	0x00 0x00 0x00 0x00 0x00 0x00 0x00 
+: sadsmile
+	0x00 0x24 0x24 0x24 0x00 0x3C 0x42 0x81 
+	0x00 0x00 0x00 0x00 0x00 0x00 0x00 
 
+# vb == bgscroll
 # vd == dude-lane
 # vc == dudex
 
@@ -29,13 +51,11 @@
 	i := truckdir
 	save v0
 
-	i := truckpos
 	v0 := v1 
-
 	v1 := 10
 	v3 := random 1
 	if v3 == 0 begin
-		v1 <<= v1	
+		v1 := 20
 	end
 	
 	i := truckpos
@@ -49,15 +69,6 @@
 	i := truckpos
 	load v1
 	
-	if v3 == 1 begin
-		if v0 == 87 begin
-			v0 := 1
-		else
-			v0 := 0
-		end
-		
-	end
-
 	if v3 == -1 begin
 		if v0 == -24 begin
 			v0 := 1
@@ -65,6 +76,14 @@
 			v0 := 0
 		end		
 	end
+	if v3 == 1 begin
+		if v0 == 87 begin
+			v0 := 1
+		else
+			v0 := 0
+		end
+		
+	end	
 ;
 
 : handleinput
@@ -77,10 +96,12 @@
     if v2 key begin
 	vd := 20
     end
-
 ;
 
 : move
+	v0 := 1
+	vb -= v0
+
 	should_spawn_new_truck
 	if v0 == 1 begin
 		spawn_truck
@@ -92,25 +113,106 @@
 
 	i := truckpos
 	load v1
-	v0 += v3 
+	v4 := 1
+	if v3 == 1 begin
+		v0 += v4
+	else
+		v0 -= v4
+	end
 	i := truckpos
 	save v1
+
+	check_for_death
+	if v0 == 1 begin
+		clear
+		i := sadsmile
+		v0 := 27
+		v1 := 11
+		sprite v0 v1 8
+		loop
+		again
+	end	
+;
+
+: check_for_death
+	i := truckpos 
+	load v1 # v0=x v1=y
+	# vd == dude-lane
+	# vc == dudex
+	v3 := 0
+	if vd == v1 begin
+		if v0 >= 23 begin
+			if v0 <= 25 begin
+				v3 := 1
+			end
+		end
+	end
+	v0 := v3
 ;
 
 : draw
 	clear
-
-	i := dude
-	v0 := 10
-	sprite vc vd 8
-
+	# trucks
 	i := truckpos
 	load v1
 	
 	if v0 < 64 begin
-	i := placeholder
-	sprite v0 v1 8
+		i := placeholder
+		sprite v0 v1 8
 	end
+	
+	# background
+
+	i := topline
+	v1 := 12
+	v0 := 0 	sprite v0 v1 8
+	v0 := 8		sprite v0 v1 8
+	v0 := 16	sprite v0 v1 8
+	v0 := 24	sprite v0 v1 8
+	v0 := 32	sprite v0 v1 8
+	v0 := 40	sprite v0 v1 8
+	v0 := 48	sprite v0 v1 8
+	v0 := 56	sprite v0 v1 8
+
+	i := topline
+	v0 := vb
+	v0 >>= v0
+	v0 >>= v0
+	v1 := 22
+	sprite v0 v1 1
+	v0 += 22
+	sprite v0 v1 1
+	v0 += 22
+	sprite v0 v1 1
+
+	i := mountain
+	v0 := vb
+	v0 >>= v0
+	v0 >>= v0
+	v1 := 4
+	sprite v0 v1 8
+
+	i := house
+	v0 += 20
+	v1 := 4
+	sprite v0 v1 8
+
+	i := church
+	v0 += 15
+	v1 := 4
+	sprite v0 v1 8
+
+	i := tree
+	v0 += 12
+	v1 := 4
+	sprite v0 v1 8
+
+	# dude
+	i := dude
+	v0 := 10
+	sprite vc vd 8
+
+
 ;
 
 : main
@@ -121,18 +223,22 @@
 
 	spawn_truck
 	loop
-		sync
+		
 		handleinput
 		move
 		draw
+		sync
+		
 	again
-
+;
 
 
 : sync
-	delay := vf
-	loop
-		vf := delay
-		if vf != 0 then
-	again
+    loop
+        vf := delay
+        if vf != 0 then
+    again
+
+    vf := 1
+    delay := vf
 ;
