@@ -1,9 +1,71 @@
 : dude
 	0x1C 0x1C 0x08 0x1C 0x1A 0x18 0x14 0x24 
 	0x00 0x00 0x00 0x00 0x00 0x00 0x00 
+: truckback
+	0x00 0x00 0xFF 0xFF 0xFF 0xFF 0x66 0x66 
+	0x00 0x00 0x00 0x00 0x00 0x00 0x00 
+: truckfront
+	0x7F 0x7F 0xFF 0xFF 0xFF 0xFF 0x18 0x18 
+	0x00 0x00 0x00 0x00 0x00 0x00 0x00 
+: placeholder
+	0x80 0x80 0x80 0x80 0x80 0x80 0x80 0x80 
+	0x00 0x00 0x00 0x00 0x00 0x00 0x00 
 
 # vd == dude-lane
-# ve == dudex
+# vc == dudex
+
+: truckdir -1
+: truckpos 0 20
+
+: spawn_truck
+	i := truckdir
+	v0 := random 1
+	v1 := 0
+	if v0 == 0 begin
+		v0 := -1
+		v1 := 63
+	end
+
+	i := truckdir
+	save v0
+
+	i := truckpos
+	v0 := v1 
+
+	v1 := 10
+	v3 := random 1
+	if v3 == 0 begin
+		v1 <<= v1	
+	end
+	
+	i := truckpos
+	save v1	
+;
+
+: should_spawn_new_truck
+	i := truckdir
+	load v0
+	v3 := v0
+	i := truckpos
+	load v1
+	
+	if v3 == 1 begin
+		if v0 == 87 begin
+			v0 := 1
+		else
+			v0 := 0
+		end
+		
+	end
+
+	if v3 == -1 begin
+		if v0 == -24 begin
+			v0 := 1
+		else 
+			v0 := 0
+		end		
+	end
+;
 
 : handleinput
     v2 := 5 # up
@@ -18,20 +80,51 @@
 
 ;
 
-: body
-	sync
+: move
+	should_spawn_new_truck
+	if v0 == 1 begin
+		spawn_truck
+	end
+
+	i := truckdir
+	load v0
+	v3 := v0
+
+	i := truckpos
+	load v1
+	v0 += v3 
+	i := truckpos
+	save v1
+;
+
+: draw
 	clear
-	ve += 1
+
+	i := dude
 	v0 := 10
-	sprite ve vd 8
+	sprite vc vd 8
+
+	i := truckpos
+	load v1
 	
+	if v0 < 64 begin
+	i := placeholder
+	sprite v0 v1 8
+	end
 ;
 
 : main
 	i := dude
+
+	vc := 20
+	vd := 20
+
+	spawn_truck
 	loop
+		sync
 		handleinput
-		body
+		move
+		draw
 	again
 
 
