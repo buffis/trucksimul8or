@@ -78,6 +78,8 @@
 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 
 0x00 0x00 0x00 0x00 0xBB 0x80 0x92 0x00 
 0x90 0x80 0x93 0x80 0x00 0x00 0x00 0x00 
+: titlecursor
+0xC0 0x20 0x20 0xC0 0x00 0x00 0x00 0x00 
 
 
 
@@ -301,7 +303,9 @@
 	sprite vc vd 8
 ;
 
-: main
+: mainscreen
+	
+
 	clear
 	i := titleup1
 	v0 := 0
@@ -327,10 +331,40 @@
 	i := titledown3
 	v0 += 16
 	sprite v0 v1 0
+
+	v3 := 11
 	loop
+		i := titlecursor
+		v0 := 2
+		sprite v0 v3 4
+		if vf != 0 begin
+			sprite v0 v3 4
+		end
 
+		v2 := key
 
+		if v2 == 5 begin #up
+			if v3 != 11 begin
+				sprite v0 v3 4
+				v3 += -5
+			end
+		end
+
+		if v2 == 8 begin
+			if v3 != 26 begin
+				sprite v0 v3 4
+				v3 += 5
+			end
+		end
+
+		
+
+		if v2 != 6 then
 	again
+;
+
+: main
+	mainscreen
 
 
 	vc := 20
