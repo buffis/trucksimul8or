@@ -315,27 +315,76 @@
 	v1 := 4
 	sprite v0 v1 8
 
-	v0 := va
-	v1 := 0
-	draw_pixel
-	v0 += 7
-	v1 += 5
-	draw_pixel
-	v0 += 6
-	v1 := 0
-	draw_pixel
-	v0 += 7
-	v1 += 2
-	draw_pixel
-	v0 += 3
-	v1 += 1
-	draw_pixel
-	v0 += 8
-	v1 += 1
-	draw_pixel
-	v0 += 7
-	v1 += 253
-	draw_pixel
+	v0 := va v1 := 8 draw_pixel
+	v0 += 1 v1 := 7 draw_pixel
+	v0 += 1 v1 := 6 draw_pixel
+	v0 += 1 v1 := 5 draw_pixel
+	v0 += 1 v1 := 4 draw_pixel
+	v0 += 1 v1 := 5 draw_pixel
+	v0 += 1 v1 := 6 draw_pixel
+	v0 += 1 v1 := 7 draw_pixel
+	v0 += 1 v1 := 8 draw_pixel
+
+	v0 += 1 v1 := 8 draw_pixel
+	v0 += 1 v1 := 7 draw_pixel
+	v0 += 1 v1 := 6 draw_pixel
+	v0 += 1 v1 := 5 draw_pixel
+	v0 += 1 v1 := 4 draw_pixel
+	v0 += 1 v1 := 3 draw_pixel
+	v0 += 1 v1 := 2 draw_pixel
+	v0 += 1 v1 := 1 draw_pixel
+	v0 += 1 v1 := 2 draw_pixel
+	v0 += 1 v1 := 3 draw_pixel
+	v0 += 1 v1 := 4 draw_pixel
+	v0 += 1 v1 := 5 draw_pixel
+	v0 += 1 v1 := 6 draw_pixel
+	v0 += 1 v1 := 7 draw_pixel
+	v0 += 1 v1 := 8 draw_pixel
+
+	v0 += 1 v1 := 8 draw_pixel
+	v0 += 1 v1 := 7 draw_pixel
+	v0 += 1 v1 := 6 draw_pixel
+	v0 += 1 v1 := 5 draw_pixel
+	v0 += 1 v1 := 4 draw_pixel
+	v0 += 1 v1 := 5 draw_pixel
+	v0 += 1 v1 := 6 draw_pixel
+	v0 += 1 v1 := 7 draw_pixel
+	v0 += 1 v1 := 8 draw_pixel
+	
+	v0 += 1 v1 := 8 draw_pixel
+	v0 += 1 v1 := 7 draw_pixel
+	v0 += 1 v1 := 6 draw_pixel
+	v0 += 1 v1 := 5 draw_pixel
+	v0 += 1 v1 := 4 draw_pixel
+	v0 += 1 v1 := 3 draw_pixel
+	v0 += 1 v1 := 2 draw_pixel
+	v0 += 1 v1 := 3 draw_pixel
+	v0 += 1 v1 := 4 draw_pixel
+	v0 += 1 v1 := 5 draw_pixel
+	v0 += 1 v1 := 6 draw_pixel
+	v0 += 1 v1 := 7 draw_pixel
+	v0 += 1 v1 := 8 draw_pixel
+
+
+	v0 += 1 v1 := 8 draw_pixel
+	v0 += 1 v1 := 7 draw_pixel
+	v0 += 1 v1 := 6 draw_pixel
+	v0 += 1 v1 := 5 draw_pixel
+	v0 += 1 v1 := 4 draw_pixel
+	v0 += 1 v1 := 5 draw_pixel
+	v0 += 1 v1 := 6 draw_pixel
+	v0 += 1 v1 := 7 draw_pixel
+	v0 += 1 v1 := 8 draw_pixel
+
+	v0 += 1 v1 := 8 draw_pixel
+	v0 += 1 v1 := 7 draw_pixel
+	v0 += 1 v1 := 6 draw_pixel
+	v0 += 1 v1 := 5 draw_pixel
+	v0 += 1 v1 := 6 draw_pixel
+	v0 += 1 v1 := 7 draw_pixel
+	v0 += 1 v1 := 8 draw_pixel
+	v0 += 1 v1 := 7 draw_pixel
+	v0 += 1 v1 := 8 draw_pixel
 
 	# dude
 	v4 := 2
