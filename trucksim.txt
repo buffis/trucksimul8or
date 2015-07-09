@@ -1,3 +1,26 @@
+: numbers
+0xE0 0xA0 0xA0 0xE0  # 0
+0x40 0x40 0x40 0x40  # 1
+0xE0 0x20 0x80 0xE0  # 2
+0xE0 0x20 0x60 0xE0  # 3
+0xA0 0xE0 0x20 0x20  # 4
+0xE0 0x80 0x20 0xE0  # 5
+0xE0 0x80 0xE0 0xE0  # 6
+0xE0 0x20 0x20 0x20  # 7
+0xE0 0xA0 0xE0 0xE0  # 8
+0xE0 0xE0 0x20 0xE0  # 9
+
+
+: c 0xE0 0x80 0x80 0xE0 
+: r 0xE0 0xA0 0xC0 0xA0 
+: a 0xE0 0xA0 0xE0 0xA0 
+: s 0xE0 0x80 0x20 0xE0 
+: h 0xA0 0xA0 0xE0 0xA0 
+: bang 0x40 0x40 0x00 0x40 
+
+: score
+0x00 0x00
+
 : dude
 	0x1C 0x1C 0x08 0x1C 0x1A 0x18 0x14 0x24 
 : dudeshoes
@@ -133,6 +156,27 @@
 : honk2
 0x80 0x40 0x40 0x40 0x40 0x40 0x40 0x80 
 
+: reset_score
+	i := score
+	v0 := 0
+	v1 := 0
+	v2 := 0
+	save v2
+;
+: increment_score
+	i := score
+	load v2
+	v0 += 1
+	if v0 == 0 begin
+		v1 += 1
+		if v1 == 0 begin
+			v2 += 1
+		end
+	end
+	i := score
+	save v2
+;
+
 
 # vb == bgscroll
 # vd == dude-lane
@@ -239,14 +283,46 @@
 
 	check_for_death
 	if v0 == 1 begin
-		clear
-		i := sadsmile
-		v0 := 27
-		v1 := 11
-		sprite v0 v1 8
-		v0 := key
-		v0 := key
+		you_lose_screen
+		v9 := 1
 	end	
+;
+
+: you_lose_screen
+	cool_clear
+	v0 := 21
+	v1 := 9
+	i := c
+	sprite v0 v1 4
+	v0 += 4
+	i := r
+	sprite v0 v1 4
+	v0 += 4
+	i := a
+	sprite v0 v1 4
+	v0 += 4
+	i := s
+	sprite v0 v1 4
+	v0 += 4
+	i := h
+	sprite v0 v1 4
+	v0 += 4
+	i := bang
+	sprite v0 v1 4
+
+
+	i := score
+	load v2
+	v5 := 32
+	v6 := 19
+	v4 := v0
+	draw_score_part
+	v4 := v1
+	v5 += 236
+	draw_score_part
+
+	v0 := key
+	v0 := key
 ;
 
 : check_for_death
@@ -469,9 +545,82 @@
 		plane 1
 	end
 	
-	
-	
+	draw_score
+;
 
+: draw_number # x=v5, y=v6, num=v7
+	i := numbers
+	v7 <<= v7
+	v7 <<= v7
+	i += v7
+	sprite v5 v6 4 
+;
+
+: draw_score_part
+	v7 := 0
+	loop
+		if v4 >= 100 begin
+			v7 += 1
+			v4 += 156
+		end
+		if v4 >= 100 then
+	again
+	draw_number
+	v7 := 0
+	v5 += 4
+	loop
+		if v4 >= 10 begin
+			v7 += 1
+			v4 += 246
+		end
+		if v4 >= 10 then
+	again
+	draw_number
+	v7 := 0
+	v5 += 4
+	loop
+		if v4 >= 1 begin
+			v7 += 1
+			v4 += 255
+		end
+		if v4 >= 1 then
+	again
+	draw_number
+;
+
+: draw_score
+	i := score
+	load v2
+	v5 := 52
+	v6 := 0
+	v4 := v0
+	draw_score_part
+	v4 := v1
+	v5 += 236
+	draw_score_part
+;
+
+: cool_clear
+	plane 2
+	clear
+	plane 1
+
+	v2 := 0
+	v3 := 0
+	loop
+		v0 := random 63
+		v1 := random 31
+		i := pixel
+		sprite v0 v1 1
+		if vf == 0 then
+			sprite v0 v1 4
+
+		v2 += 1
+		if v2 == 0 then
+			v3 += 1
+		if v3 != 40 then
+	again
+	clear
 ;
 
 : mainscreen
@@ -610,19 +759,27 @@
 
 	vc := 20
 	vd := 20
+	reset_score
 	spawn_truck
 	move_truck_to_top
 	loop		
 		handleinput
 		move
-		draw
-		sync
-		
+		if v9 == 0 begin
+			draw
+			increment_score
+			sync
+		end
+		if v9 == 0 then
 	again
+	v9 := 0
+	
 ;
 
 : main
-	mainscreen
+	loop
+		mainscreen
+	again
 ;
 
 
