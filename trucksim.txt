@@ -20,9 +20,9 @@
 
 : score 0x00 0x00
 
-: honk  0x01
+: honk  0x00
 
-: tires 0x02
+: tires 0x01
 
 : dude
 	0x1C 0x1C 0x08 0x1C 0x1A 0x18 0x14 0x24 
@@ -151,6 +151,15 @@
 0x0C 0x00 0x0C 0x00 0x3F 0x00 0x3F 0x00 
 0x3C 0xC0 0x3C 0xC0 0x3C 0x00 0x3C 0x00 
 0x33 0x00 0x33 0x00 0xC3 0x00 0xC3 0x00 
+: bigdudeshoes
+0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 
+0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 
+0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 
+0x00 0x00 0x00 0x00 0xC3 0x00 0xC3 0x00 
+0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 
+0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 
+0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 
+0x00 0x00 0x00 0x00 0xC3 0x00 0xC3 0x00 
 
 : honk1
 0x7F 0xFF 0x80 0x00 0xA8 0x04 0xA8 0x05 
@@ -165,7 +174,10 @@
 	load v0
 ;
 
-: set_honk
+: toggle_honk
+	has_honk
+	v1 := 1
+	v0 ^= v1
 	i := honk
 	save v0
 ;
@@ -680,7 +692,9 @@
 ;
 
 : mainscreen
+	plane 3
 	clear
+	plane 1
 	i := titleup1
 	v0 := 0
 	v1 := 0
@@ -745,42 +759,61 @@
 ;
 
 : customize
-	clear
-	i := customizeup1
-	v0 := 0
-	v1 := 0
-	sprite v0 v1 0
-	i := customizeup2
-	v0 += 16
-	sprite v0 v1 0
-	i := customizeup3
-	v0 += 16
-	sprite v0 v1 0
-	
-	i := customizedown1
-	v0 := 4
-	v1 := 16
-	sprite v0 v1 0
-	i := customizedown2
-	v0 += 16
-	sprite v0 v1 0
-
-	i := bigdude
-	v0 := 36
-	v1 := 10
-	sprite v0 v1 0
-
-	i := honk1
-	v0 := 45
-	v1 := 2
-	sprite v0 v1 0
-	i := honk2
-	v0 += 16
-	sprite v0 v1 8
-
-
 	v3 := 10
 	loop
+		plane 3
+		clear
+		plane 1
+		i := customizeup1
+		v0 := 0
+		v1 := 0
+		sprite v0 v1 0
+		i := customizeup2
+		v0 += 16
+		sprite v0 v1 0
+		i := customizeup3
+		v0 += 16
+		sprite v0 v1 0
+		
+		i := customizedown1
+		v0 := 4
+		v1 := 16
+		sprite v0 v1 0
+		i := customizedown2
+		v0 += 16
+		sprite v0 v1 0
+
+		i := bigdude
+		v0 := 36
+		v1 := 10
+		sprite v0 v1 0
+		i := bigdudeshoes
+		v0 := 36
+		v1 := 10
+		sprite v0 v1 0
+
+		get_tires
+		if v0 == 0 then plane 0
+		if v0 == 1 then plane 1
+		if v0 == 2 then plane 2
+		if v0 == 3 then plane 3
+		i := bigdudeshoes
+		v0 := 36
+		v1 := 10
+		sprite v0 v1 0
+		plane 1
+
+		has_honk
+		if v0 == 1 begin
+			i := honk1
+			v0 := 45
+			v1 := 2
+			sprite v0 v1 0
+			i := honk2
+			v0 += 16
+			sprite v0 v1 8
+		end
+
 		i := titlecursor
 		v0 := 0
 		sprite v0 v3 4
@@ -805,8 +838,36 @@
 		end
 
 		
-
-		if v2 != 6 then
+		v5 := 1
+		if v2 == 6 begin
+			if v3 == 10 begin
+				get_tires
+				if v0 != 1 begin
+					v0 := 1
+					set_tires
+				else
+					v0 := 2
+					set_tires
+				end
+			end
+			if v3 == 15 begin
+				get_tires
+				if v0 != 1 begin
+					v0 := 1
+					set_tires
+				else
+					v0 := 3
+					set_tires
+				end
+			end
+			if v3 == 20 begin
+				toggle_honk
+			end
+			if v3 == 25 begin
+				v5 := 0
+			end
+		end
+		if v5 == 1 then
 	again
 ;
 
