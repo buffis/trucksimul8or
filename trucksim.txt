@@ -18,19 +18,21 @@
 : h 0xA0 0xA0 0xE0 0xA0 
 : bang 0x40 0x40 0x00 0x40 
 
-: score
-0x00 0x00
+: score 0x00 0x00
 
-: honk  0x00
-: tires 0x00
+: honk  0x01
+
+: tires 0x02
 
 : dude
 	0x1C 0x1C 0x08 0x1C 0x1A 0x18 0x14 0x24 
 : dudeshoes
 	0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x24 
+	0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x24 
 : dude2
 	0x1C 0x1C 0x08 0x1A 0x1C 0x18 0x14 0x18 
 : dudeshoes2
+	0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x18 
 	0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x18 
 : truckback
 	0x00 0x00 0xFF 0xFF 0xFF 0xFF 0x66 0x66 
@@ -168,12 +170,23 @@
 	save v0
 ;
 
+: set_tires
+	i := tires
+	save v0
+;
+
+: get_tires
+	i := tires
+	load v0
+;
+
+
 : reset_score
 	i := score
 	v0 := 0
 	v1 := 0
 	v2 := 0
-	save v2
+	save v1
 ;
 : increment_score
 	i := score
@@ -186,7 +199,7 @@
 		end
 	end
 	i := score
-	save v2
+	save v1
 ;
 
 
@@ -541,25 +554,35 @@
 	v3 &= v4
 	if v3 == 0 begin
 		i := dude
-		v0 := 10
 		sprite vc vd 8
-		plane 2
 		i := dudeshoes
 		sprite vc vd 8
+		get_tires
+		if v0 == 0 then plane 0
+		if v0 == 1 then plane 1
+		if v0 == 2 then plane 2
+		if v0 == 3 then plane 3
+		i := dudeshoes
+		sprite vc vd 8
+		plane 1
 	
 	else
 		i := dude2
-		v0 := 10
 		sprite vc vd 8
-		plane 2
 		i := dudeshoes2
 		sprite vc vd 8
-	end
+		get_tires
+		if v0 == 0 then plane 0
+		if v0 == 1 then plane 1
+		if v0 == 2 then plane 2
+		if v0 == 3 then plane 3
+		i := dudeshoes2
+		sprite vc vd 8
+		plane 1	end
 	plane 1
 
 	# honk
 	has_honk
-	v0 := 1
 	if v0 == 1 begin
 		v0 := vb
 		v1 := 32
