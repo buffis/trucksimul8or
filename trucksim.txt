@@ -546,7 +546,6 @@
 		plane 2
 		i := dudeshoes
 		sprite vc vd 8
-		plane 1
 	
 	else
 		i := dude2
@@ -555,11 +554,12 @@
 		plane 2
 		i := dudeshoes2
 		sprite vc vd 8
-		plane 1
 	end
+	plane 1
 
 	# honk
 	has_honk
+	v0 := 1
 	if v0 == 1 begin
 		v0 := vb
 		v1 := 32
