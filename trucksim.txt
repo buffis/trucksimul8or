@@ -10,7 +10,6 @@
 0xE0 0xA0 0xE0 0xE0  # 8
 0xE0 0xE0 0x20 0xE0  # 9
 
-
 : c 0xE0 0x80 0x80 0xE0 
 : r 0xE0 0xA0 0xC0 0xA0 
 : a 0xE0 0xA0 0xE0 0xA0 
@@ -23,6 +22,8 @@
 : honk  0x00
 
 : tires 0x01
+
+: achievementcounter 0x00
 
 : dude
 	0x1C 0x1C 0x08 0x1C 0x1A 0x18 0x14 0x24 
@@ -120,21 +121,16 @@
 0x45 0x72 0x45 0x12 0x77 0x72 0x00 0x00 
 0x00 0x00 0x00 0x00 0x0C 0xEC 0x0A 0x8A 
 0x0C 0xCA 0x0A 0xEC 0x00 0x00 0x0C 0xEC 
-
 : customizeup2
 0x00 0x00 0x00 0x00 0x75 0x5D 0x55 0x45 
 0x57 0x49 0x57 0x51 0x75 0x5D 0x00 0x00 
 0x00 0x00 0x00 0x00 0x32 0xAE 0x2A 0xE8 
 0x32 0xA2 0x2A 0xAE 0x00 0x00 0xA3 0x2A 
-
-
 : customizeup3
 0x00 0x00 0x00 0x00 0xC0 0x00 0x00 0x00 
 0xC0 0x00 0x00 0x00 0xC0 0x00 0x00 0x00 
 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 
 0x00 0x00 0x00 0x00 0x00 0x00 0xE0 0x00 
-
-
 : customizedown1
 0xAA 0xAC 0xAE 0xCA 0xCA 0xAA 0x00 0x00 
 0xAE 0x8A 0xAA 0xCC 0xEA 0xAA 0xAE 0xAA 
@@ -206,14 +202,12 @@
 	v0 += 1
 	if v0 == 0 begin
 		v1 += 1
-		if v1 == 0 begin
+		if v1 == 0 then
 			v2 += 1
-		end
 	end
 	i := score
 	save v1
 ;
-
 
 # vb == bgscroll
 # vd == dude-lane
@@ -279,14 +273,12 @@
 
 : handleinput
     v2 := 5 # up
-    if v2 key begin
+    if v2 key then
         vd := 10
-    end
 
     v2 := 8 # down
-    if v2 key begin
+    if v2 key then
 	vd := 20
-    end
 ;
 
 : move
@@ -295,14 +287,12 @@
 	v1 := 31
 	
 	v1 &= vb
-	if v1 == 31 begin
+	if v1 == 31 then
 		va -= v0
-	end
 
 	should_spawn_new_truck
-	if v0 == 1 begin
+	if v0 == 1 then
 		spawn_truck
-	end
 
 	i := truckdir
 	load v0
@@ -321,6 +311,8 @@
 
 	check_for_death
 	if v0 == 1 begin
+		v0 := 100
+		buzzer := v0
 		you_lose_screen
 		v9 := 1
 	end	
@@ -371,18 +363,16 @@
 	v3 := 0
 	if vd == v1 begin
 		if v0 >= 23 begin
-			if v0 <= 25 begin
+			if v0 <= 25 then
 				v3 := 1
-			end
 		end
 	end
 	v0 := v3	
 ;
 
 : draw_car_part
-	if v5 < 64 begin
+	if v5 < 64 then
 		sprite v5 v1 8
-	end
 	v5 += v4	
 	i += v3
 ;
@@ -426,9 +416,8 @@
 : draw_pixel
 	i := pixel
 	sprite v0 v1 1
-	if vf != 0 begin
+	if vf != 0 then
 		sprite v0 v1 1
-	end
 ;
 
 : draw
@@ -463,10 +452,6 @@
 	v0 += 22
 	sprite v0 v1 1
 
-
-
-
-
 	i := mountain
 	v0 := vb
 	v0 >>= v0
@@ -498,7 +483,6 @@
 	v0 += 1 v1 := 6 draw_pixel
 	v0 += 1 v1 := 7 draw_pixel
 	v0 += 1 v1 := 8 draw_pixel
-
 	v0 += 1 v1 := 8 draw_pixel
 	v0 += 1 v1 := 7 draw_pixel
 	v0 += 1 v1 := 6 draw_pixel
@@ -514,7 +498,6 @@
 	v0 += 1 v1 := 6 draw_pixel
 	v0 += 1 v1 := 7 draw_pixel
 	v0 += 1 v1 := 8 draw_pixel
-
 	v0 += 1 v1 := 8 draw_pixel
 	v0 += 1 v1 := 7 draw_pixel
 	v0 += 1 v1 := 6 draw_pixel
@@ -524,7 +507,6 @@
 	v0 += 1 v1 := 6 draw_pixel
 	v0 += 1 v1 := 7 draw_pixel
 	v0 += 1 v1 := 8 draw_pixel
-	
 	v0 += 1 v1 := 8 draw_pixel
 	v0 += 1 v1 := 7 draw_pixel
 	v0 += 1 v1 := 6 draw_pixel
@@ -538,8 +520,6 @@
 	v0 += 1 v1 := 6 draw_pixel
 	v0 += 1 v1 := 7 draw_pixel
 	v0 += 1 v1 := 8 draw_pixel
-
-
 	v0 += 1 v1 := 8 draw_pixel
 	v0 += 1 v1 := 7 draw_pixel
 	v0 += 1 v1 := 6 draw_pixel
@@ -549,7 +529,6 @@
 	v0 += 1 v1 := 6 draw_pixel
 	v0 += 1 v1 := 7 draw_pixel
 	v0 += 1 v1 := 8 draw_pixel
-
 	v0 += 1 v1 := 8 draw_pixel
 	v0 += 1 v1 := 7 draw_pixel
 	v0 += 1 v1 := 6 draw_pixel
@@ -695,6 +674,7 @@
 	plane 3
 	clear
 	plane 1
+
 	i := titleup1
 	v0 := 0
 	v1 := 0
