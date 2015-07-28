@@ -1,0 +1,18 @@
+### Playing the game
+
+Easy way:
+1. Visit this link:
+   http://johnearnest.github.io/Octo/index.html?gist=a8a227e707cd138ba258
+
+Harder way:
+1. Open Octo
+   http://johnearnest.github.io/Octo/
+2. Change to 1000Cycles/Frame
+3. Click Options menu and enable XO-Chip
+4. Paste contents of trucksim.8o into the codebox and press run
+
+### Controls
+
+  W = Steer left
+  S = Steer right
+  E = Select menu option
